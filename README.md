@@ -1,5 +1,7 @@
 # Trello clone
 
+Trello clone backend project with NestJs and TypeOrm with PostgreSQL
+
 ## Project setup
 
 ```bash
