@@ -1,12 +1,11 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Board } from './etities/board.entity';
-import { Roles } from '../auth/roles-auth.decorator';
-import { RoleEnum } from '../roles/enums/role.enum';
-import { RoleGuard } from '../auth/guards/role.guard';
+import { Roles } from '../decorators/roles-auth.decorator';
+import { RoleName } from '../roles/enums/role-name';
 
 @ApiTags('Boards')
 @Controller('boards')
@@ -22,8 +21,7 @@ export class BoardsController {
 
     @ApiOperation({ summary: 'Get all boards' })
     @ApiResponse({ status: HttpStatus.OK, type: [Board] })
-    @Roles(RoleEnum.Admin)
-    @UseGuards(RoleGuard)
+    @Roles(RoleName.Admin)
     @Get()
     getAllProjects() {
         return this.projectService.getAllProjects();

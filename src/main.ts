@@ -6,7 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function start() {
     const host = process.env.HOST || 'localhost';
     const port = process.env.PORT || 5000;
-    const globalPrefix = '/api';
+    const globalPrefix = 'api';
 
     const app = await NestFactory.create(AppModule);
     app.setGlobalPrefix(globalPrefix);
@@ -25,7 +25,7 @@ async function start() {
 
     await app.listen(port, () => {
         console.log(`Server started!`);
-        console.log(`Use http://${host}:${port}${documentPath} for get documentation`);
+        console.log(`Use http://${host}:${port}/${documentPath} for get documentation`);
     });
 }
 

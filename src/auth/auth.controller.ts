@@ -1,35 +1,34 @@
+import { Body, Controller, Get, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LocalAuthGuard } from './guards/auth.guard';
 import { AuthService } from './auth.service';
-import { Body, Controller, HttpStatus, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { Public } from '../decorators/public.decorator';
 
 @ApiTags('Authorization')
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    @ApiOperation({ summary: 'Register new user with email and password' })
-    @ApiResponse({ status: HttpStatus.OK, type: String, description: 'User authentication token' })
-    @UsePipes(ValidationPipe)
-    @Post('/registration')
-    registration(@Body() userDto: CreateUserDto) {
-        return this.authService.registration(userDto);
+    @ApiOperation({ summary: 'Register new user by email and password' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'User data with access token' })
+    @Public()
+    @Post('registration')
+    async registration(@Body() createUserDto: CreateUserDto) {
+        return this.authService.register(createUserDto);
     }
 
     @ApiOperation({ summary: 'Login user with email and password' })
-    @ApiResponse({ status: HttpStatus.OK, type: String, description: 'User authentication token' })
-    @UsePipes(ValidationPipe)
-    @Post('/login')
-    @Post()
-    login(@Body() userDto: CreateUserDto) {
-        return this.authService.login(userDto);
+    @ApiResponse({ status: HttpStatus.OK, description: 'User data with access token' })
+    @Post('login')
+    @UseGuards(LocalAuthGuard)
+    async login(@Request() request) {
+        return this.authService.login(request.user);
     }
 
-    // TODO: Refresh tokens
-
-    // TODO: Change password
-
-    // TODO: Forgot password
-
-    // TODO: Reset password
+    @Get('profile')
+    @UseGuards(LocalAuthGuard)
+    async getProfile(@Request() request) {
+        return request.user;
+    }
 }

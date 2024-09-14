@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
@@ -10,17 +9,17 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { RoleEnum } from '../enums/role.enum';
+import { RoleName } from '../enums/role-name';
 
 @Entity('roles')
-export class Role extends BaseEntity {
+export class Role {
     @ApiProperty({ example: '0', description: 'Role unique identifier' })
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ApiProperty({ example: RoleEnum.User, description: 'Unique value roles', nullable: false, uniqueItems: true })
-    @Column({ type: 'varchar', nullable: false, unique: true })
-    role: RoleEnum;
+    @ApiProperty({ example: RoleName.User, description: 'Unique value roles', nullable: false, uniqueItems: true })
+    @Column({ type: 'enum', enum: RoleName, nullable: false, unique: true })
+    name: RoleName;
 
     @ApiProperty({ example: 'Administrator', description: 'Description roles', nullable: false })
     @Column({ type: 'varchar', nullable: false })

@@ -1,10 +1,9 @@
 import { Body, Controller, Get, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from './entities/role.entity';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { RoleEnum } from './enums/role.enum';
+import { RoleName } from './enums/role-name';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -20,15 +19,16 @@ export class RolesController {
 
     @ApiOperation({ summary: 'Get roles by value' })
     @ApiResponse({ status: HttpStatus.OK, type: Role })
+    @ApiQuery({ name: 'name', enum: RoleName })
     @Get(':value')
-    getByValue(@Param('value') value: RoleEnum) {
-        return this.roleService.getRoleByValue(value);
+    findOne(@Param('value') value: RoleName) {
+        return this.roleService.findOne(value);
     }
 
     @ApiOperation({ summary: 'Update roles description' })
     @ApiResponse({ status: HttpStatus.OK, type: Role })
-    @Patch(':value')
-    updateRoleDescription(@Param('value') value: RoleEnum, @Body() dto: UpdateRoleDto) {
-        return this.roleService.updateRoleDescription(value, dto);
+    @Patch()
+    update(@Body() updateRoleDto: CreateRoleDto) {
+        return this.roleService.update(updateRoleDto);
     }
 }

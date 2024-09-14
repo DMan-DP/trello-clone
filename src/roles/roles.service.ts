@@ -1,10 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { RoleEnum } from './enums/role.enum';
+import { RoleName } from './enums/role-name';
 
 @Injectable()
 export class RolesService {
@@ -13,36 +12,36 @@ export class RolesService {
         private readonly roleRepository: Repository<Role>,
     ) {}
 
-    async createRole(dto: CreateRoleDto) {
-        const candidate = await this.roleRepository.findOneBy({ role: dto.value });
+    async createRole(createRoleDto: CreateRoleDto) {
+        const candidate = await this.roleRepository.findOneBy({ name: createRoleDto.name });
         if (candidate) {
-            throw new HttpException('Role with this value is exists', HttpStatus.CONFLICT);
+            throw new ConflictException(`Role ${createRoleDto.name} already exists`);
         }
 
-        return await this.roleRepository.save(dto);
+        return await this.roleRepository.save(createRoleDto);
+    }
+
+    async findOne(value: RoleName) {
+        return await this.roleRepository.findOne({ where: { name: value } });
+    }
+
+    async update(updateRoleDto: CreateRoleDto) {
+        const existRole = await this.roleRepository.findOneBy({ name: updateRoleDto.name });
+        if (!existRole) {
+            throw new NotFoundException(`Role ${updateRoleDto.name} not found`);
+        }
+
+        this.roleRepository.merge(existRole, updateRoleDto);
+        return await this.roleRepository.save(existRole);
     }
 
     async findUserRoleOrCreate() {
-        const userRole = await this.roleRepository.findOneBy({ role: RoleEnum.User });
+        const userRole = await this.roleRepository.findOneBy({ name: RoleName.User });
         if (userRole) return userRole;
 
         return await this.roleRepository.save({
-            role: RoleEnum.User,
+            name: RoleName.User,
             description: 'Base user role',
         });
-    }
-
-    async getRoleByValue(value: RoleEnum) {
-        return await this.roleRepository.findOne({ where: { role: value } });
-    }
-
-    async updateRoleDescription(value: RoleEnum, dto: UpdateRoleDto) {
-        const role = await this.roleRepository.findOneBy({ role: value });
-        if (!role) {
-            throw new NotFoundException(`Role ${value} not found`);
-        }
-
-        role.description = dto.description;
-        return await role.save();
     }
 }

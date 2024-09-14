@@ -7,6 +7,7 @@ import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesService } from '../roles/roles.service';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -23,51 +24,60 @@ export class UserService {
         const role = await this.roleService.findUserRoleOrCreate();
 
         return await this.userRepository.save({
-            ...createUserDto,
+            email: createUserDto.email,
+            password: await argon2.hash(createUserDto.password),
             roles: [role],
         });
     }
 
-    async updateUser(id: string, dto: UpdateUserDto) {
-        const user = await this.userRepository.findOneBy({ id });
-        if (!user) {
-            throw new NotFoundException(`User ${id} not found`);
-        }
-
-        this.userRepository.merge(user, dto);
-        return await this.userRepository.save(user);
-    }
-
-    async findOne(email: string) {
+    async findOne(id: string) {
         return await this.userRepository.findOne({
-            where: { email },
+            where: { id: id },
             relations: { boards: true, roles: true },
         });
     }
 
-    async addRole(dto: AddRoleDto) {
+    async findAll() {
+        return await this.userRepository.find();
+    }
+
+    async update(updateUserDto: UpdateUserDto) {
+        const existUser = await this.userRepository.findOneBy({ id: updateUserDto.id });
+        if (!existUser) {
+            throw new NotFoundException(`User ${updateUserDto.id} not found}`);
+        }
+
+        this.userRepository.merge(existUser, {
+            ...updateUserDto,
+            password: await argon2.hash(updateUserDto.password),
+        });
+
+        return await this.userRepository.save(existUser);
+    }
+
+    async addRole(addRoleDto: AddRoleDto) {
         const user = await this.userRepository.findOne({
-            where: { id: dto.userId },
+            where: { id: addRoleDto.id },
             relations: { roles: true },
         });
 
-        const role = await this.roleService.getRoleByValue(dto.roleValue);
+        const role = await this.roleService.findOne(addRoleDto.roleName);
 
         if (role && user) {
             user.roles.push(role);
             return await user.save();
         }
 
-        throw new HttpException('Users or roles not found', HttpStatus.NOT_FOUND);
+        throw new NotFoundException('Users or role not found');
     }
 
-    async banUser(dto: BanUserDto) {
-        const user = await this.userRepository.findOneBy({ id: dto.userId });
+    async ban(banUserDto: BanUserDto) {
+        const user = await this.userRepository.findOneBy({ id: banUserDto.id });
         if (!user) {
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+            throw new NotFoundException('User not found');
         }
         user.banned = true;
-        user.banReason = dto.banReason;
+        user.banReason = banUserDto.banReason;
         return await user.save();
     }
 }

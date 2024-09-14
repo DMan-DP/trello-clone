@@ -25,7 +25,7 @@ export class User extends BaseEntity {
 
     @ApiProperty({ description: 'User password hash' })
     @Column({ name: 'password_hash', type: 'varchar', nullable: false })
-    passwordHash: string;
+    password: string;
 
     @CreateDateColumn({ name: 'created_at', update: false })
     createdAt: Date;

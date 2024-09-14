@@ -1,13 +1,13 @@
-import { IsString, IsUUID } from 'class-validator';
-import { RoleEnum } from '../../roles/enums/role.enum';
+import { IsEnum, IsUUID } from 'class-validator';
+import { RoleName } from '../../roles/enums/role-name';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AddRoleDto {
-    @ApiProperty({ type: 'uuid' })
-    @IsUUID(undefined, { message: 'User id should be a uuid' })
-    readonly userId: string;
+    @ApiProperty({ description: 'User id' })
+    @IsUUID(undefined, { message: 'User id should be uuid' })
+    readonly id: string;
 
-    @ApiProperty()
-    @IsString({ message: 'Role value should be string' })
-    readonly roleValue: RoleEnum;
+    @ApiProperty({ description: 'Role name', example: RoleName.Admin })
+    @IsEnum({ enum: RoleName })
+    readonly roleName: RoleName;
 }

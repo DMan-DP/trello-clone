@@ -2,7 +2,7 @@ import { Entity, JoinColumn, PrimaryColumn } from 'typeorm';
 
 @Entity('user_roles')
 export class UserRole {
-    @PrimaryColumn({ type: 'int', name: 'user_id' })
+    @PrimaryColumn({ type: 'uuid', name: 'user_id' })
     @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
     userId: string;
 
