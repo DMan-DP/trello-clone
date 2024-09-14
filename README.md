@@ -1,6 +1,6 @@
 # Trello clone
 
-Trello clone backend project with NestJs and TypeOrm with PostgreSQL
+Trello clone backend project powered by NestJs and TypeOrm with PostgreSQL
 
 ## Project setup
 
