@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ROLES_KEY } from '../../decorators/roles-auth.decorator';
 import { Role } from '../../roles/entities/role.entity';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtRoleAuthGuard implements CanActivate {
@@ -19,7 +20,7 @@ export class JwtRoleAuthGuard implements CanActivate {
         private readonly reflector: Reflector,
     ) {}
 
-    canActivate(context: ExecutionContext) {
+    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
             context.getHandler(),
             context.getClass(),

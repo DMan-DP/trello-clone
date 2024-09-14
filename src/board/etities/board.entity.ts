@@ -1,5 +1,4 @@
 import {
-    BaseEntity,
     Column,
     CreateDateColumn,
     Entity,
@@ -14,12 +13,12 @@ import { List } from '../../lists/entities/list.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity('boards')
-export class Board extends BaseEntity {
+export class Board {
     @ApiProperty({ example: '9bc87264-b1ee-489f-a028-a3bf07c1f3df', description: 'Unique identifier' })
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ApiProperty({ example: 'Board', description: 'boards name' })
+    @ApiProperty({ example: 'Board', description: 'board name' })
     @Column({ type: 'varchar', nullable: false })
     name: string;
 

@@ -39,9 +39,9 @@ export class UserController {
 
     @ApiOperation({ summary: 'Update user' })
     @ApiResponse({ status: HttpStatus.OK, type: User })
-    @Patch()
-    update(@Body() updateUserDto: UpdateUserDto) {
-        return this.userService.update(updateUserDto);
+    @Patch(':id')
+    update(@Param('id') id, @Body() updateUserDto: UpdateUserDto) {
+        return this.userService.update(id, updateUserDto);
     }
 
     @ApiOperation({ summary: 'Add roles for user' })

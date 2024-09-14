@@ -8,7 +8,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Board } from '../../boards/etities/board.entity';
+import { Board } from '../../board/etities/board.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Card } from '../../cards/entities/card.entity';
 
@@ -21,7 +21,7 @@ export class List {
     @Column({ type: 'varchar', nullable: false })
     name: string;
 
-    @ApiProperty({ example: 0, description: 'List position on a boards' })
+    @ApiProperty({ example: 0, description: 'List position on a board' })
     @Column({ type: 'int', unique: true, nullable: false, default: 0 })
     position: number;
 

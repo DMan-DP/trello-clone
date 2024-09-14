@@ -41,15 +41,16 @@ export class UserService {
         return await this.userRepository.find();
     }
 
-    async update(updateUserDto: UpdateUserDto) {
-        const existUser = await this.userRepository.findOneBy({ id: updateUserDto.id });
+    async update(id: string, updateUserDto: UpdateUserDto) {
+        const existUser = await this.userRepository.findOneBy({ id });
         if (!existUser) {
-            throw new NotFoundException(`User ${updateUserDto.id} not found}`);
+            throw new NotFoundException(`User ${id} not found}`);
         }
 
+        const password = updateUserDto.password ? await argon2.hash(updateUserDto.password) : undefined;
         this.userRepository.merge(existUser, {
             ...updateUserDto,
-            password: await argon2.hash(updateUserDto.password),
+            password,
         });
 
         return await this.userRepository.save(existUser);

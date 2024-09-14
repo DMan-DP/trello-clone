@@ -11,7 +11,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Board } from '../../boards/etities/board.entity';
+import { Board } from '../../board/etities/board.entity';
 
 @Entity('users')
 export class User extends BaseEntity {

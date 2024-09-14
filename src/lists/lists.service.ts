@@ -3,7 +3,7 @@ import { CreateListDto } from './dto/create-list.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { List } from './entities/list.entity';
 import { Repository } from 'typeorm';
-import { Board } from '../boards/etities/board.entity';
+import { Board } from '../board/etities/board.entity';
 
 @Injectable()
 export class ListsService {

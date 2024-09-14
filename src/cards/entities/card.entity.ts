@@ -25,7 +25,7 @@ export class Card {
     @Column({ type: 'varchar', nullable: true })
     description: string;
 
-    @ApiProperty({ example: 0, description: 'Card position in boards', nullable: false })
+    @ApiProperty({ example: 0, description: 'Card position in board', nullable: false })
     @Column({ name: 'position', type: 'int', unique: true, nullable: false, default: 0 })
     position: number;
 
