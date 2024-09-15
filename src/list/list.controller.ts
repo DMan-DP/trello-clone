@@ -7,7 +7,7 @@ import { UpdateListDto } from './dto/update-list.dto';
 import { ReorderListDto } from './dto/reorder-list.dto';
 import { PayloadRequest } from '../auth/requests/payload-request';
 
-@ApiTags('Boards')
+@ApiTags('Lists')
 @Controller('lists')
 export class ListController {
     constructor(private readonly listService: ListService) {}

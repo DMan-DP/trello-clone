@@ -7,7 +7,7 @@ import { Card } from './entities/card.entity';
 import { PayloadRequest } from '../auth/requests/payload-request';
 import { ReorderCardDto } from './dto/reorder-card.dto';
 
-@ApiTags('Boards')
+@ApiTags('Cards')
 @Controller('cards')
 export class CardController {
     constructor(private readonly cardService: CardService) {}
