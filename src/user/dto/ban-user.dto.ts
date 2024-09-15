@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class BanUserDto {
     @ApiProperty({ description: 'User id' })
-    @IsUUID(undefined, { message: 'User id should be uuid' })
+    @IsUUID()
     readonly id: string;
 
     @ApiProperty({ description: 'Ban reason' })
-    @IsString({ message: 'Should be string' })
+    @IsString()
     readonly banReason: string;
 }

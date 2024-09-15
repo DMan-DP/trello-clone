@@ -13,7 +13,7 @@ export class AuthService {
     ) {}
 
     async validateUser(email: string, password: string) {
-        const user = await this.userService.findOne(email);
+        const user = await this.userService.findOneByEmail(email);
         if (user) {
             const passwordIsMatch = await argon2.verify(user.password, password);
             if (passwordIsMatch) return user;
@@ -26,14 +26,14 @@ export class AuthService {
         return this.generateToken(user);
     }
 
-    async login(user: User) {
+    async login(id: string) {
+        const user = await this.userService.findOne(id);
         return this.generateToken(user);
     }
 
     private generateToken(user: User) {
         return {
-            ...user,
-            access_token: this.jwtService.sign({ id: user.id, email: user.email }),
+            access_token: this.jwtService.sign({ id: user.id, roles: user.roles }),
         };
     }
 }

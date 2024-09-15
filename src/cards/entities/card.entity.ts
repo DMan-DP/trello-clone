@@ -8,7 +8,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
-import { List } from '../../lists/entities/list.entity';
+import { List } from '../../list/entities/list.entity';
 
 @ApiTags('Cards')
 @Entity('cards')

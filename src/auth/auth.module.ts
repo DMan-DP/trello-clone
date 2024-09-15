@@ -10,6 +10,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 @Module({
     imports: [
         JwtModule.register({
+            global: true,
             secret: process.env.JWT_PRIVATE_KEY || 'SECRET',
             signOptions: {
                 expiresIn: '24h',

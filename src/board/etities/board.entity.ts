@@ -9,7 +9,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { List } from '../../lists/entities/list.entity';
+import { List } from '../../list/entities/list.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity('boards')

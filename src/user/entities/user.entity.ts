@@ -12,6 +12,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Board } from '../../board/etities/board.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -25,6 +26,7 @@ export class User extends BaseEntity {
 
     @ApiProperty({ description: 'User password hash' })
     @Column({ name: 'password_hash', type: 'varchar', nullable: false })
+    @Exclude()
     password: string;
 
     @CreateDateColumn({ name: 'created_at', update: false })

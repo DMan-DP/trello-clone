@@ -17,9 +17,9 @@ export class List {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ApiProperty({ example: 'Name', description: 'List name' })
+    @ApiProperty({ example: 'Title', description: 'List name' })
     @Column({ type: 'varchar', nullable: false })
-    name: string;
+    title: string;
 
     @ApiProperty({ example: 0, description: 'List position on a board' })
     @Column({ type: 'int', unique: true, nullable: false, default: 0 })
@@ -32,7 +32,7 @@ export class List {
     updatedAt: Date;
 
     @JoinColumn({ name: 'board_id' })
-    @ManyToOne(() => Board, (board) => board.lists, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Board, (board) => board.lists)
     board: Board;
 
     @OneToMany(() => Card, (card) => card.list, { onDelete: 'CASCADE' })

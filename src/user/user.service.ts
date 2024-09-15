@@ -1,13 +1,19 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesService } from '../roles/roles.service';
 import * as argon2 from 'argon2';
+import { UserRoleDto } from './dto/user-role.dto';
 
 @Injectable()
 export class UserService {
@@ -19,7 +25,7 @@ export class UserService {
 
     async createUser(createUserDto: CreateUserDto) {
         const existUser = await this.userRepository.findOneBy({ email: createUserDto.email });
-        if (existUser) throw new HttpException('User with this email is exists', HttpStatus.CONFLICT);
+        if (existUser) throw new ConflictException('User with this email is exists');
 
         const role = await this.roleService.findUserRoleOrCreate();
 
@@ -31,14 +37,15 @@ export class UserService {
     }
 
     async findOne(id: string) {
-        return await this.userRepository.findOne({
-            where: { id: id },
-            relations: { boards: true, roles: true },
-        });
+        const user = await this.userRepository.findOneBy({ id });
+        if (user.banned) throw new ForbiddenException({ message: 'User is banned', reason: user.banReason });
+        return user;
     }
 
-    async findAll() {
-        return await this.userRepository.find();
+    async findOneByEmail(email: string) {
+        const user = await this.userRepository.findOneBy({ email });
+        if (user.banned) throw new ForbiddenException({ message: 'User is banned', reason: user.banReason });
+        return user;
     }
 
     async update(id: string, updateUserDto: UpdateUserDto) {
@@ -56,29 +63,97 @@ export class UserService {
         return await this.userRepository.save(existUser);
     }
 
-    async addRole(addRoleDto: AddRoleDto) {
+    async delete(id: string) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (user.banned) throw new ForbiddenException({ message: 'User is banned', reason: user.banReason });
+        return await this.userRepository.remove(user);
+    }
+
+    async addRole(addRoleDto: UserRoleDto) {
         const user = await this.userRepository.findOne({
             where: { id: addRoleDto.id },
             relations: { roles: true },
         });
+        if (!user) throw new NotFoundException(`User ${addRoleDto.id} not found`);
 
         const role = await this.roleService.findOne(addRoleDto.roleName);
+        if (!role) throw new NotFoundException(`Role ${addRoleDto.roleName} not found`);
 
-        if (role && user) {
-            user.roles.push(role);
-            return await user.save();
+        if (user.roles.indexOf(role) !== -1) {
+            throw new ConflictException(`User ${addRoleDto.id} already have role ${addRoleDto.roleName}`);
         }
 
-        throw new NotFoundException('Users or role not found');
+        user.roles.push(role);
+        await this.userRepository.save(user);
+        return true;
+    }
+
+    async removeRole(removeRoleDto: UserRoleDto) {
+        const user = await this.userRepository.findOne({
+            where: { id: removeRoleDto.id },
+            relations: { roles: true },
+        });
+        if (!user) throw new NotFoundException(`User ${removeRoleDto.roleName} not found`);
+
+        const role = await this.roleService.findOne(removeRoleDto.roleName);
+        if (!role) throw new NotFoundException(`User ${removeRoleDto.id} not found`);
+
+        const roleIndex = user.roles.indexOf(role);
+        if (roleIndex === -1) {
+            throw new NotFoundException(`User ${removeRoleDto.id} not have role ${removeRoleDto.roleName}`);
+        }
+
+        user.roles.slice(roleIndex, 1);
+        await this.userRepository.save(user);
+        return true;
     }
 
     async ban(banUserDto: BanUserDto) {
         const user = await this.userRepository.findOneBy({ id: banUserDto.id });
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
+        if (!user) throw new NotFoundException('User not found');
         user.banned = true;
         user.banReason = banUserDto.banReason;
-        return await user.save();
+        await this.userRepository.save(user);
+        return true;
+    }
+
+    async unBan(banUserDto: BanUserDto) {
+        const user = await this.userRepository.findOneBy({ id: banUserDto.id });
+        if (!user) throw new NotFoundException(`User ${banUserDto.id} not found`);
+        if (!user.banned) throw new ConflictException(`User ${banUserDto.id} is not baned`);
+        user.banned = false;
+        user.banReason = null;
+        await this.userRepository.save(user);
+        return true;
+    }
+
+    async findAll() {
+        return await this.userRepository.find();
+    }
+
+    async isConnectedToBoard(id: string, boardId: string) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id,
+                boards: { id: boardId },
+            },
+            relations: { boards: true },
+        });
+
+        if (!user) throw new UnauthorizedException('User not connected to this board');
+        return true;
+    }
+
+    async isConnectedToList(id: string, listId: string) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id,
+                boards: { lists: { id: listId } },
+            },
+            relations: ['boards', 'boards.lists'],
+        });
+
+        if (!user) throw new UnauthorizedException('User not connected to this list');
+        return true;
     }
 }

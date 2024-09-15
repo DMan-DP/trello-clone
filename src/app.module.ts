@@ -3,16 +3,17 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { RolesModule } from './roles/roles.module';
-import { AuthModule } from './auth/auth.module';
+import { ListModule } from './list/list.module';
 import { BoardModule } from './board/board.module';
+import { AuthModule } from './auth/auth.module';
 import { User } from './user/entities/user.entity';
 import { Role } from './roles/entities/role.entity';
 import { UserRole } from './roles/entities/user-role.entity';
 import { Board } from './board/etities/board.entity';
-import { List } from './lists/entities/list.entity';
+import { List } from './list/entities/list.entity';
 import { Card } from './cards/entities/card.entity';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtRoleAuthGuard } from './auth/guards/jwt-role-auth.guard';
+import { AuthGuard } from './auth/guards/auth.guard';
 
 @Module({
     imports: [
@@ -31,13 +32,14 @@ import { JwtRoleAuthGuard } from './auth/guards/jwt-role-auth.guard';
         }),
         UserModule,
         RolesModule,
-        AuthModule,
         BoardModule,
+        ListModule,
+        AuthModule,
     ],
     providers: [
         {
             provide: APP_GUARD,
-            useClass: JwtRoleAuthGuard,
+            useClass: AuthGuard,
         },
     ],
 })

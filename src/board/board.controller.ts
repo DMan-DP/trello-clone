@@ -4,6 +4,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Board } from './etities/board.entity';
+import { PayloadRequest } from '../auth/requests/payload-request';
 
 @ApiTags('Boards')
 @Controller('boards')
@@ -17,31 +18,31 @@ export class BoardController {
         return this.projectService.create(createBoardDto, request.user.id);
     }
 
-    @ApiOperation({ summary: 'Get all board' })
+    @ApiOperation({ summary: 'Get all boards' })
     @ApiResponse({ status: HttpStatus.OK, type: [Board] })
     @Get()
     findAll(@Request() request) {
         return this.projectService.findAll(request.user.id);
     }
 
-    @ApiOperation({ summary: 'Get board by id' })
+    @ApiOperation({ summary: 'Get board' })
     @ApiResponse({ status: HttpStatus.OK, type: Board })
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.projectService.findOne(id);
     }
 
-    @ApiOperation({ summary: 'Update board by id' })
+    @ApiOperation({ summary: 'Update an existing board' })
     @ApiResponse({ status: HttpStatus.OK, type: Board })
     @Patch(':id')
-    updateProject(@Param('id') id: string, @Body() updateProjectDto: UpdateBoardDto) {
-        return this.projectService.update(id, updateProjectDto);
+    update(@Param('id') id: string, @Body() updateProjectDto: UpdateBoardDto, @Request() request: PayloadRequest) {
+        return this.projectService.update(id, request.user.id, updateProjectDto);
     }
 
-    @ApiOperation({ summary: 'Remove project by id' })
+    @ApiOperation({ summary: 'Delete a board' })
     @ApiResponse({ status: HttpStatus.OK })
     @Delete(':id')
-    removeProject(@Param('id') id: string) {
-        return this.projectService.delete(id);
+    removeProject(@Param('id') id: string, @Request() request: PayloadRequest) {
+        return this.projectService.delete(id, request.user.id);
     }
 }
