@@ -17,16 +17,16 @@ export class Card {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ApiProperty({ example: 'Name', description: 'Card name' })
+    @ApiProperty({ example: 'Title', description: 'Card name' })
     @Column({ type: 'varchar', nullable: false })
-    name: string;
+    title: string;
 
-    @ApiProperty({ example: 'Description', description: 'Card description' })
+    @ApiProperty({ example: 'Description', description: 'Card content' })
     @Column({ type: 'varchar', nullable: true })
-    description: string;
+    content: string;
 
-    @ApiProperty({ example: 0, description: 'Card position in board', nullable: false })
-    @Column({ name: 'position', type: 'int', unique: true, nullable: false, default: 0 })
+    @ApiProperty({ example: 0, description: 'Card position in board' })
+    @Column({ name: 'position', type: 'int', unique: true, nullable: false })
     position: number;
 
     @CreateDateColumn({ name: 'created_at', update: false })

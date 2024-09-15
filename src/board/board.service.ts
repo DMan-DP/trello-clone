@@ -44,7 +44,7 @@ export class BoardService {
         return await this.boardRepository.delete(id);
     }
 
-    private async isUserAssociatedWithBoard(boardId: string, userId: string) {
+    async isUserAssociatedWithBoard(boardId: string, userId: string) {
         const count = await this.boardRepository.count({
             where: { id: boardId, user: { id: userId } },
         });

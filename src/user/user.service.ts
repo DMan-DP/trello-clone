@@ -103,6 +103,8 @@ export class UserService {
             throw new NotFoundException(`User ${removeRoleDto.id} not have role ${removeRoleDto.roleName}`);
         }
 
+        if (user.roles.length === 1) throw new ConflictException(`User must have and one somthing role`);
+
         user.roles.slice(roleIndex, 1);
         await this.userRepository.save(user);
         return true;

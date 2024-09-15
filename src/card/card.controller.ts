@@ -1,36 +1,46 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, HttpStatus, Param, Patch, Post, Put, Request } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Card } from './entities/card.entity';
+import { PayloadRequest } from '../auth/requests/payload-request';
+import { ReorderCardDto } from '../board/dto/reorder-card.dto';
 
 @ApiTags('Boards')
 @Controller('cards')
 export class CardController {
     constructor(private readonly cardService: CardService) {}
 
+    @ApiOperation({ summary: 'Create card' })
+    @ApiResponse({ status: HttpStatus.CREATED, type: Card })
     @Post()
-    create(@Body() createCardDto: CreateCardDto) {
-        return this.cardService.create(createCardDto);
+    create(@Body() createCardDto: CreateCardDto, @Request() request: PayloadRequest) {
+        return this.cardService.create(createCardDto, request.user.id);
     }
 
-    @Get()
-    findAll() {
-        return this.cardService.findAll();
-    }
-
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.cardService.findOne(+id);
-    }
-
+    @ApiOperation({ summary: 'Update card' })
+    @ApiResponse({ status: HttpStatus.OK, type: Card })
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-        return this.cardService.update(+id, updateCardDto);
+    update(
+        @Param('id') id: string,
+        @Request() request: PayloadRequest,
+        @Body() updateCardDto: UpdateCardDto
+    ) {
+        return this.cardService.update(id, request.user.id, updateCardDto);
     }
 
+    @ApiOperation({ summary: 'Reorder card positions or lists' })
+    @ApiResponse({ status: HttpStatus.OK })
+    @Put('reorder')
+    reorder(@Body() reorderCardDto: ReorderCardDto, @Request() request: PayloadRequest) {
+        return this.cardService.reorder(reorderCardDto, request.user.id);
+    }
+
+    @ApiOperation({ summary: 'Delete card' })
+    @ApiResponse({ status: HttpStatus.OK })
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.cardService.remove(+id);
+    remove(@Param('id') id: string, @Request() request: PayloadRequest) {
+        return this.cardService.remove(id, request.user.id);
     }
 }

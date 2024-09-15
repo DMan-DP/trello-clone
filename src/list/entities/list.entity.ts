@@ -22,7 +22,7 @@ export class List {
     title: string;
 
     @ApiProperty({ example: 0, description: 'List position on a board' })
-    @Column({ type: 'int', unique: true, nullable: false, default: 0 })
+    @Column({ type: 'int', unique: true, nullable: false })
     position: number;
 
     @CreateDateColumn({ name: 'created_at', update: false })

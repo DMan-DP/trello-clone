@@ -2,11 +2,11 @@ import { IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class BanUserDto {
-    @ApiProperty({ description: 'User id' })
+    @ApiProperty()
     @IsUUID()
     readonly id: string;
 
-    @ApiProperty({ description: 'Ban reason' })
+    @ApiProperty()
     @IsString()
     readonly banReason: string;
 }
