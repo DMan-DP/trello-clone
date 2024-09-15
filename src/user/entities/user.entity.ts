@@ -16,7 +16,7 @@ import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User extends BaseEntity {
-    @ApiProperty({ example: '68f85080-dc8c-45d7-9ef8-07a1b2da96b3', description: 'Unique identifier' })
+    @ApiProperty()
     @PrimaryGeneratedColumn('uuid')
     id: string;
 

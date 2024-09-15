@@ -13,7 +13,7 @@ import { RoleName } from '../enums/role-name';
 
 @Entity('roles')
 export class Role {
-    @ApiProperty({ example: '0', description: 'Role unique identifier' })
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number;
 

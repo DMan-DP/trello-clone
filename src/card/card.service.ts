@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Card } from './entities/card.entity';
 import { ListService } from '../list/list.service';
-import { ReorderCardDto } from '../board/dto/reorder-card.dto';
+import { ReorderCardDto } from './dto/reorder-card.dto';
 import { BoardService } from '../board/board.service';
 
 @Injectable()

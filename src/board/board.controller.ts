@@ -25,7 +25,7 @@ export class BoardController {
         return this.projectService.findAll(request.user.id);
     }
 
-    @ApiOperation({ summary: 'Get board' })
+    @ApiOperation({ summary: 'Get an existing board' })
     @ApiResponse({ status: HttpStatus.OK, type: Board })
     @Get(':id')
     findOne(@Param('id') id: string) {
@@ -39,7 +39,7 @@ export class BoardController {
         return this.projectService.update(id, request.user.id, updateProjectDto);
     }
 
-    @ApiOperation({ summary: 'Delete a board' })
+    @ApiOperation({ summary: 'Delete an existing board' })
     @ApiResponse({ status: HttpStatus.OK })
     @Delete(':id')
     removeProject(@Param('id') id: string, @Request() request: PayloadRequest) {

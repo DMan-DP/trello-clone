@@ -5,7 +5,7 @@ import { UpdateCardDto } from './dto/update-card.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Card } from './entities/card.entity';
 import { PayloadRequest } from '../auth/requests/payload-request';
-import { ReorderCardDto } from '../board/dto/reorder-card.dto';
+import { ReorderCardDto } from './dto/reorder-card.dto';
 
 @ApiTags('Boards')
 @Controller('cards')
@@ -19,7 +19,7 @@ export class CardController {
         return this.cardService.create(createCardDto, request.user.id);
     }
 
-    @ApiOperation({ summary: 'Update card' })
+    @ApiOperation({ summary: 'Update an existing card' })
     @ApiResponse({ status: HttpStatus.OK, type: Card })
     @Patch(':id')
     update(
@@ -30,14 +30,14 @@ export class CardController {
         return this.cardService.update(id, request.user.id, updateCardDto);
     }
 
-    @ApiOperation({ summary: 'Reorder card positions or lists' })
+    @ApiOperation({ summary: 'Reorder an existing card positions or lists' })
     @ApiResponse({ status: HttpStatus.OK })
     @Put('reorder')
     reorder(@Body() reorderCardDto: ReorderCardDto, @Request() request: PayloadRequest) {
         return this.cardService.reorder(reorderCardDto, request.user.id);
     }
 
-    @ApiOperation({ summary: 'Delete card' })
+    @ApiOperation({ summary: 'Delete an existing card' })
     @ApiResponse({ status: HttpStatus.OK })
     @Delete(':id')
     remove(@Param('id') id: string, @Request() request: PayloadRequest) {

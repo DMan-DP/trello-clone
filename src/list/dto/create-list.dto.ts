@@ -2,15 +2,15 @@ import { IsInt, IsString, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateListDto {
-    @ApiProperty({ description: 'Board id' })
+    @ApiProperty()
     @IsUUID()
     boardId: string;
 
-    @ApiProperty({ description: 'Title' })
+    @ApiProperty()
     @IsString()
     title: string;
 
-    @ApiProperty({ description: 'Position' })
+    @ApiProperty()
     @IsInt()
     position: number;
 }

@@ -12,7 +12,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @ApiOperation({ summary: 'Register new user by email and password' })
-    @ApiResponse({ status: HttpStatus.OK, description: 'User data with access token' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Access token' })
     @Post('registration')
     @Public()
     async registration(@Body() createUserDto: CreateUserDto) {
@@ -20,7 +20,7 @@ export class AuthController {
     }
 
     @ApiOperation({ summary: 'Login user with email and password' })
-    @ApiResponse({ status: HttpStatus.OK, description: 'User data with access token' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Access token' })
     @Post('login')
     @Public()
     @UseGuards(LocalAuthGuard)

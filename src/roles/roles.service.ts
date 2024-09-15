@@ -1,16 +1,23 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { RoleName } from './enums/role-name';
+import { baseCreatedRoles, RoleName } from './enums/role-name';
 
 @Injectable()
-export class RolesService {
+export class RolesService implements OnModuleInit {
     constructor(
         @InjectRepository(Role)
         private readonly roleRepository: Repository<Role>,
     ) {}
+
+    async onModuleInit() {
+        for (let i = 0; i < baseCreatedRoles.length; i++) {
+            const role = await this.findOne(baseCreatedRoles[i].name);
+            if (!role) await this.createRole(baseCreatedRoles[i]);
+        }
+    }
 
     async createRole(createRoleDto: CreateRoleDto) {
         const candidate = await this.roleRepository.findOneBy({ name: createRoleDto.name });
@@ -33,15 +40,5 @@ export class RolesService {
 
         this.roleRepository.merge(existRole, updateRoleDto);
         return await this.roleRepository.save(existRole);
-    }
-
-    async findUserRoleOrCreate() {
-        const userRole = await this.roleRepository.findOneBy({ name: RoleName.User });
-        if (userRole) return userRole;
-
-        return await this.roleRepository.save({
-            name: RoleName.User,
-            description: 'Base user role',
-        });
     }
 }

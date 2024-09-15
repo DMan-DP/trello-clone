@@ -3,6 +3,7 @@ import {
     ForbiddenException,
     Injectable,
     NotFoundException,
+    OnModuleInit,
     UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,20 +15,40 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesService } from '../roles/roles.service';
 import * as argon2 from 'argon2';
 import { UserRoleDto } from './dto/user-role.dto';
+import * as process from 'node:process';
+import { RoleName } from '../roles/enums/role-name';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly roleService: RolesService,
     ) {}
 
+    async onModuleInit() {
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        if (!adminEmail || !adminPassword) {
+            throw new Error('Not found admin email or password');
+        }
+
+        try {
+            const existAdmin = await this.userRepository.findOneBy({ email: adminEmail });
+            if (!existAdmin) {
+                const admin = await this.createUser({ email: adminEmail, password: adminPassword });
+                await this.addRole({ id: admin.id, roleName: RoleName.Admin });
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     async createUser(createUserDto: CreateUserDto) {
         const existUser = await this.userRepository.findOneBy({ email: createUserDto.email });
         if (existUser) throw new ConflictException('User with this email is exists');
 
-        const role = await this.roleService.findUserRoleOrCreate();
+        const role = await this.roleService.findOne(RoleName.User);
 
         return await this.userRepository.save({
             email: createUserDto.email,

@@ -1,4 +1,4 @@
-import { Card } from '../../card/entities/card.entity';
+import { Card } from '../entities/card.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUUID } from 'class-validator';
 

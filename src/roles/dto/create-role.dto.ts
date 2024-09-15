@@ -3,11 +3,11 @@ import { IsEnum, IsString } from 'class-validator';
 import { RoleName } from '../enums/role-name';
 
 export class CreateRoleDto {
+    @ApiProperty({ example: RoleName.User, enum: RoleName })
     @IsEnum(RoleName)
-    @ApiProperty({ example: RoleName.User, description: 'Unique value roles', enum: RoleName })
     readonly name: RoleName;
 
-    @ApiProperty({ example: 'administrator', description: 'Description roles' })
-    @IsString({ message: 'Should be string' })
+    @ApiProperty()
+    @IsString()
     readonly description: string;
 }

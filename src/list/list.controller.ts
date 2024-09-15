@@ -33,14 +33,14 @@ export class ListController {
         return this.listService.update(id, request.user.id, updateListDto);
     }
 
-    @ApiOperation({ summary: 'Update list position' })
+    @ApiOperation({ summary: 'Update an existing list position' })
     @ApiResponse({ status: HttpStatus.OK })
     @Put('reorder')
     reorder(@Body() reorderListDto: ReorderListDto, @Request() request: PayloadRequest) {
         return this.listService.reorder(request.user.id, reorderListDto);
     }
 
-    @ApiOperation({ summary: 'Delete a list' })
+    @ApiOperation({ summary: 'Delete an existing list' })
     @ApiResponse({ status: HttpStatus.OK })
     @Delete(':id')
     delete(@Param('id') id: string, @Request() request: PayloadRequest) {

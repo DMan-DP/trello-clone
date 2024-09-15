@@ -14,7 +14,7 @@ import { User } from '../../user/entities/user.entity';
 
 @Entity('boards')
 export class Board {
-    @ApiProperty({ example: '9bc87264-b1ee-489f-a028-a3bf07c1f3df', description: 'Unique identifier' })
+    @ApiProperty()
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
