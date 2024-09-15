@@ -12,7 +12,7 @@ export class ListService {
     constructor(
         @InjectRepository(List)
         private readonly listRepository: Repository<List>,
-        private readonly userService: UserService
+        private readonly userService: UserService,
     ) {}
 
     async create(createListDto: CreateListDto, userId: string) {

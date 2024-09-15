@@ -3,7 +3,7 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 
 @Injectable()
-export class CardsService {
+export class CardService {
     create(createCardDto: CreateCardDto) {
         return 'This action adds a new cards';
     }

@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { CardsService } from './cards.service';
+import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Boards')
 @Controller('cards')
-export class CardsController {
-    constructor(private readonly cardService: CardsService) {}
+export class CardController {
+    constructor(private readonly cardService: CardService) {}
 
     @Post()
     create(@Body() createCardDto: CreateCardDto) {

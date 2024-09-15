@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { Board } from '../../board/etities/board.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Card } from '../../cards/entities/card.entity';
+import { Card } from '../../card/entities/card.entity';
 
 @Entity('lists')
 export class List {

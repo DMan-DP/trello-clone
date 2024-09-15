@@ -5,13 +5,14 @@ import { UserModule } from './user/user.module';
 import { RolesModule } from './roles/roles.module';
 import { ListModule } from './list/list.module';
 import { BoardModule } from './board/board.module';
+import { CardModule } from './card/card.module';
 import { AuthModule } from './auth/auth.module';
 import { User } from './user/entities/user.entity';
 import { Role } from './roles/entities/role.entity';
 import { UserRole } from './roles/entities/user-role.entity';
 import { Board } from './board/etities/board.entity';
 import { List } from './list/entities/list.entity';
-import { Card } from './cards/entities/card.entity';
+import { Card } from './card/entities/card.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
 
@@ -34,6 +35,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
         RolesModule,
         BoardModule,
         ListModule,
+        CardModule,
         AuthModule,
     ],
     providers: [
