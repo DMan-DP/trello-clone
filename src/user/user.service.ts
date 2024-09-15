@@ -58,14 +58,17 @@ export class UserService implements OnModuleInit {
     }
 
     async findOne(id: string) {
-        const user = await this.userRepository.findOneBy({ id });
+        const user = await this.userRepository.findOne({
+            where: { id },
+            relations: { roles: true },
+        });
         if (user.banned) throw new ForbiddenException({ message: 'User is banned', reason: user.banReason });
         return user;
     }
 
     async findOneByEmail(email: string) {
         const user = await this.userRepository.findOneBy({ email });
-        if (user.banned) throw new ForbiddenException({ message: 'User is banned', reason: user.banReason });
+        if (user && user.banned) throw new ForbiddenException({ message: 'User is banned', reason: user.banReason });
         return user;
     }
 
@@ -140,10 +143,10 @@ export class UserService implements OnModuleInit {
         return true;
     }
 
-    async unBan(banUserDto: BanUserDto) {
-        const user = await this.userRepository.findOneBy({ id: banUserDto.id });
-        if (!user) throw new NotFoundException(`User ${banUserDto.id} not found`);
-        if (!user.banned) throw new ConflictException(`User ${banUserDto.id} is not baned`);
+    async unBan(userId: string) {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        if (!user) throw new NotFoundException(`User ${userId} not found`);
+        if (!user.banned) throw new ConflictException(`User ${userId} is not baned`);
         user.banned = false;
         user.banReason = null;
         await this.userRepository.save(user);

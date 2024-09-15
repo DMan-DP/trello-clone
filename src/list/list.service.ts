@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { List } from './entities/list.entity';
 import { Repository } from 'typeorm';
 import { UpdateListDto } from './dto/update-list.dto';
-import { ReorderListDto } from './dto/reorder-list.dto';
+import { ReorderListDto, ReorderListItemDto } from './dto/reorder-list.dto';
 import { BoardService } from '../board/board.service';
 import { UserService } from '../user/user.service';
 
@@ -48,7 +48,7 @@ export class ListService {
         //await this.userService.isConnectedToBoard(userId, reorderListDto.boardId);
         await this.boardService.isUserAssociatedWithBoard(reorderListDto.boardId, userId);
 
-        const promises = reorderListDto.lists.map(async (listItem: List) => {
+        const promises = reorderListDto.lists.map(async (listItem: ReorderListItemDto) => {
             const list = await this.listRepository.findOneBy({
                 id: listItem.id,
                 board: { id: reorderListDto.boardId },

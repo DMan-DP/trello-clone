@@ -15,6 +15,7 @@ async function start() {
         .setTitle('Trello clone backend')
         .setDescription('Document REST API')
         .setVersion('1.0.0')
+        .addBearerAuth()
         .build();
 
     const documentPath = globalPrefix + '/docs';

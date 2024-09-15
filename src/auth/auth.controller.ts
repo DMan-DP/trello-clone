@@ -1,5 +1,5 @@
 import { Body, Controller, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -12,6 +12,7 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @ApiOperation({ summary: 'Register new user by email and password' })
+    @ApiQuery({ type: CreateUserDto })
     @ApiResponse({ status: HttpStatus.OK, description: 'Access token' })
     @Post('registration')
     @Public()
@@ -20,6 +21,7 @@ export class AuthController {
     }
 
     @ApiOperation({ summary: 'Login user with email and password' })
+    @ApiQuery({ type: CreateUserDto })
     @ApiResponse({ status: HttpStatus.OK, description: 'Access token' })
     @Post('login')
     @Public()

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Card } from './entities/card.entity';
 import { ListService } from '../list/list.service';
-import { ReorderCardDto } from './dto/reorder-card.dto';
+import { ReorderCardDto, ReorderCardItemDto } from './dto/reorder-card.dto';
 import { BoardService } from '../board/board.service';
 
 @Injectable()
@@ -36,12 +36,12 @@ export class CardService {
     async reorder(reorderCardDto: ReorderCardDto, userId: string) {
         await this.boardService.isUserAssociatedWithBoard(reorderCardDto.boardId, userId);
 
-        const promises = reorderCardDto.cards.map(async (cardItem: Card) => {
+        const promises = reorderCardDto.cards.map(async (cardItem: ReorderCardItemDto) => {
             const card = await this.cardRepository.findOneBy({ id: cardItem.id });
             if (!card) throw new NotFoundException(`Card ${cardItem.id} not found`);
             await this.cardRepository.update(cardItem.id, {
                 position: cardItem.position,
-                list: { id: cardItem.list.id },
+                list: { id: cardItem.listId },
             });
         });
 

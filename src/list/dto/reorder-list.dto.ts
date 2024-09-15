@@ -1,16 +1,6 @@
 import { IsArray, IsInt, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ReorderListDto {
-    @ApiProperty()
-    @IsUUID()
-    boardId: string;
-
-    @ApiProperty()
-    @IsArray()
-    lists: ReorderListItemDto[];
-}
-
 export class ReorderListItemDto {
     @ApiProperty()
     @IsUUID()
@@ -19,4 +9,14 @@ export class ReorderListItemDto {
     @ApiProperty()
     @IsInt()
     position: number;
+}
+
+export class ReorderListDto {
+    @ApiProperty()
+    @IsUUID()
+    boardId: string;
+
+    @ApiProperty({ type: ReorderListItemDto, isArray: true })
+    @IsArray()
+    lists: ReorderListItemDto[];
 }

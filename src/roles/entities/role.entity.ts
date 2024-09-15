@@ -17,9 +17,9 @@ export class Role {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ApiProperty({ example: RoleName.User, description: 'Unique value roles', nullable: false, uniqueItems: true })
-    @Column({ type: 'enum', enum: RoleName, nullable: false, unique: true })
-    name: RoleName;
+    @ApiProperty({ example: RoleName.Admin, description: 'Unique value roles', nullable: false, uniqueItems: true })
+    @Column({ type: 'varchar', nullable: false, unique: true })
+    name: string;
 
     @ApiProperty({ example: 'Administrator', description: 'Description roles', nullable: false })
     @Column({ type: 'varchar', nullable: false })

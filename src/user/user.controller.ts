@@ -11,7 +11,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserRoleDto } from './dto/user-role.dto';
 import { Roles } from 'src/decorators/roles-auth.decorator';
 import { BanUserDto } from './dto/ban-user.dto';
@@ -26,6 +26,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @ApiOperation({ summary: 'Get user' })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK, type: User })
     @Get()
     @UseInterceptors(ClassSerializerInterceptor)
@@ -34,6 +35,7 @@ export class UserController {
     }
 
     @ApiOperation({ summary: 'Update an existing user' })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK, type: User })
     @Patch()
     @UseInterceptors(ClassSerializerInterceptor)
@@ -42,6 +44,7 @@ export class UserController {
     }
 
     @ApiOperation({ summary: 'Delete an existing user' })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK })
     @Delete()
     delete(@Request() request: PayloadRequest) {
@@ -49,6 +52,8 @@ export class UserController {
     }
 
     @ApiOperation({ summary: 'Add roles for an existing user' })
+    @ApiQuery({ type: UserRoleDto })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK })
     @Post('role')
     @Roles(RoleName.Admin)
@@ -57,6 +62,8 @@ export class UserController {
     }
 
     @ApiOperation({ summary: 'Delete roles for an existing user' })
+    @ApiQuery({ type: UserRoleDto })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK })
     @Delete('role')
     @Roles(RoleName.Admin)
@@ -65,6 +72,8 @@ export class UserController {
     }
 
     @ApiOperation({ summary: 'Ban an existing user' })
+    @ApiQuery({ type: BanUserDto })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK })
     @Post('/ban')
     @Roles(RoleName.Admin)
@@ -73,14 +82,17 @@ export class UserController {
     }
 
     @ApiOperation({ summary: 'Unban an existing user' })
+    @ApiQuery({ type: BanUserDto })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK })
-    @Post('/unban')
+    @Post('/unban/:id')
     @Roles(RoleName.Admin)
-    unBan(@Body() banUserDto: BanUserDto) {
-        return this.userService.unBan(banUserDto);
+    unBan(userId: string) {
+        return this.userService.unBan(userId);
     }
 
     @ApiOperation({ summary: 'Get all users' })
+    @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK })
     @Get('all')
     @UseInterceptors(ClassSerializerInterceptor)

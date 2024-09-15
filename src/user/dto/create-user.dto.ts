@@ -6,7 +6,7 @@ export class CreateUserDto {
     @IsEmail()
     readonly email: string;
 
-    @ApiProperty({ example: 'a78h@E9s' })
+    @ApiProperty({ example: 'user11' })
     @IsString()
     @MinLength(6)
     @MaxLength(32)

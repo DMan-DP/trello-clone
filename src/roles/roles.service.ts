@@ -28,7 +28,7 @@ export class RolesService implements OnModuleInit {
         return await this.roleRepository.save(createRoleDto);
     }
 
-    async findOne(value: RoleName) {
+    async findOne(value: string) {
         return await this.roleRepository.findOne({ where: { name: value } });
     }
 
