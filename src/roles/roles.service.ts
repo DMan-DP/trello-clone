@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { baseCreatedRoles, RoleName } from './enums/role-name';
+import { baseCreatedRoles } from './enums/role-name';
 
 @Injectable()
 export class RolesService implements OnModuleInit {

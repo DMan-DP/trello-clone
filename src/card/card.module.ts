@@ -7,11 +7,7 @@ import { Card } from './entities/card.entity';
 import { BoardModule } from '../board/board.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Card]),
-        BoardModule,
-        ListModule,
-    ],
+    imports: [TypeOrmModule.forFeature([Card]), BoardModule, ListModule],
     controllers: [CardController],
     providers: [CardService],
     exports: [CardService],

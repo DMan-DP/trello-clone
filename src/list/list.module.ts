@@ -5,13 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { List } from './entities/list.entity';
 import { Board } from '../board/etities/board.entity';
 import { BoardModule } from '../board/board.module';
-import { UserModule } from '../user/user.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([List, Board]),
-        BoardModule,
-    ],
+    imports: [TypeOrmModule.forFeature([List, Board]), BoardModule],
     providers: [ListService],
     controllers: [ListController],
     exports: [ListService],

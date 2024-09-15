@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { UpdateListDto } from './dto/update-list.dto';
 import { ReorderListDto, ReorderListItemDto } from './dto/reorder-list.dto';
 import { BoardService } from '../board/board.service';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ListService {

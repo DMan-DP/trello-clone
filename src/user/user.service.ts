@@ -127,7 +127,7 @@ export class UserService implements OnModuleInit {
             throw new NotFoundException(`User ${removeRoleDto.id} not have role ${removeRoleDto.roleName}`);
         }
 
-        if (user.roles.length === 1) throw new ConflictException(`User must have and one somthing role`);
+        if (user.roles.length === 1) throw new ConflictException(`User must have and one something role`);
 
         user.roles.slice(roleIndex, 1);
         await this.userRepository.save(user);

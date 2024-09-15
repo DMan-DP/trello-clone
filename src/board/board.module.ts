@@ -7,10 +7,7 @@ import { User } from '../user/entities/user.entity';
 import { UserModule } from '../user/user.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Board, User]),
-        UserModule,
-    ],
+    imports: [TypeOrmModule.forFeature([Board, User]), UserModule],
     providers: [BoardService],
     controllers: [BoardController],
     exports: [BoardService],
